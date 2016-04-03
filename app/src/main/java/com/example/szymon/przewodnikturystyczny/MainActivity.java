@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.net.URL;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -25,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
             View rootView = inflater.inflate(R.layout.fragment_main,container,false);
-            new GetJson().execute(getContext());
+
+            new GetJson().execute(new GetJsonParameters(getActivity(),"http://wti.mikroprint.pl/get_places.php?number=8"));
             return rootView;
         }
     }

@@ -27,19 +27,19 @@ import java.util.zip.Inflater;
  * Created by Szymon on 03.04.2016.
  * Context- one object
  */
-class GetJson extends AsyncTask<Context, Void,Void> {
+class GetJson extends AsyncTask<GetJsonParameters, Void,Void> {
     Places places = new Places();
     List<String> listofPlaces = new ArrayList<>();
     ArrayAdapter<String> placeAdapter;
     ListView listView;
     Context context;
     @Override
-    protected Void doInBackground(Context... param){
+    protected Void doInBackground(GetJsonParameters... param){
         HttpURLConnection connection = null;
         String json = null;
-        context = param[0];
+        context = param[0].getContext();
         try {
-            URL url = new URL("http://wti.mikroprint.pl/get_places.php?number=8");
+            URL url = param[0].getUrl();
             connection = (HttpURLConnection) url.openConnection();//disconnect
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             if (connection.getResponseCode() == 200) {
