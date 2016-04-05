@@ -4,6 +4,7 @@ import android.content.Context;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by Szymon on 04.04.2016.
@@ -28,12 +29,12 @@ public class GetJsonParameters {
 
     /**
      * @param context Current context.
-     * @param  url JSON's URL as String.
+     * @param  urls JSON's URL as String.
      * @param mode Mode 0- for get all places, 1- for get detailed info abaut one place.
      */
-    public GetJsonParameters(Context context, String url, int mode) {
+    public GetJsonParameters(Context context, List<String> urls, int mode) {
         this.context = context;
-        this.url = url;
+        this.url = urls.get(mode);
         this.mode = mode;
     }
     /**
@@ -41,10 +42,10 @@ public class GetJsonParameters {
      * @param context Current context.
      * @param  url JSON's URL as String.
      */
-    public GetJsonParameters(Context context, String url) {
+    public GetJsonParameters(Context context, List<String> urls) {
         this.context = context;
-        this.url = url;
         this.mode = 0;
+        this.url = urls.get(mode);
     }
 
     public Context getContext() {

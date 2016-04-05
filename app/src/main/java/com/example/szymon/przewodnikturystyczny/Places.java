@@ -14,7 +14,12 @@ public class Places {
     public void addPlace(Place place){
         places.add(place);
     }
-
+    public Place getPlace(int i){
+        return places.get(i);
+    }
+    public void fill(int i, Place place){
+        places.set(i,place);
+    }
     public List<Place> getPlaces() {
         return places;
     }

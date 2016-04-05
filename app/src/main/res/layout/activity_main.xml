@@ -9,5 +9,11 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.szymon.przewodnikturystyczny.MainActivity">
+    <Button
+        android:layout_width="343dp"
+        android:layout_height="131dp"
+        android:text="Pobierz dane"
+        android:id="@+id/download_places_button"
+        android:layout_gravity="left|bottom" />
 
 </FrameLayout>

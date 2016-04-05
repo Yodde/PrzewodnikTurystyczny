@@ -1,16 +1,9 @@
 package com.example.szymon.przewodnikturystyczny;
 
-import android.app.Activity;
-import android.content.Context;
-import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,26 +14,19 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.Inflater;
 
 /**
- * Created by Szymon on 03.04.2016.
- * Context- one object
+ * Created by Szymon on 05.04.2016.
  */
-class GetJson extends AsyncTask<GetJsonParameters, Void,Places> {
-    Places places = new Places();
-    ArrayAdapter<Place> placeAdapter;
-    ListView listView;
-    Context context;
+class GetJsonDetails extends AsyncTask<String, Void, Place> {
+
     @Override
-    protected Places doInBackground(GetJsonParameters... param){
+    protected Place doInBackground(String... param){
+        Place place = null;
         HttpURLConnection connection = null;
         String json;
-        context = param[0].getContext();
         try {
-            URL url = param[0].getUrl();
+            URL url = new URL(param[0]);
             connection = (HttpURLConnection) url.openConnection();//disconnect
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             if (connection.getResponseCode() == 200) {
@@ -51,17 +37,18 @@ class GetJson extends AsyncTask<GetJsonParameters, Void,Places> {
                 br.close();
                 json = sb.toString();
                 JSONObject jsonObject = new JSONObject(json);
-                Log.d("JSON OBJ", "JEST");
-                JSONArray jsonArray = jsonObject.getJSONArray("places");
+                JSONArray jsonArray = jsonObject.getJSONArray("place");
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     int id = object.getInt("id");
-                    String name = object.getString("name");
-                    Log.d("NAME", name);
-                    double longitude = object.getDouble("longitude");
-                    double latitude = object.getDouble("latitude");
-                    Place place = new Place(id, name, longitude, latitude);
-                    places.addPlace(place);
+                    String shortDes = object.getString("shortDescription");
+                    String description = object.getString("description");
+                    String address = object.getString("address");
+                    place = MainActivity.places.getPlace(id);
+                    place.setAddress(address);
+                    place.setDescription(description);
+                    place.setShortDescription(shortDes);
+                    MainActivity.places.fill(id,place);
                 }
 
             }
@@ -72,16 +59,11 @@ class GetJson extends AsyncTask<GetJsonParameters, Void,Places> {
         } finally {
             connection.disconnect();
         }
-        return places;
+        return place;
     }
     @Override
-    protected void onPostExecute(Places result){
+    protected void onPostExecute(Place result){
         super.onPostExecute(result);
-        MainActivity.places = result;
-        MainActivity.downloadedPlacessComplete = true;
-        MainActivity.PlaceholderFragment pf = new MainActivity.PlaceholderFragment();
-        pf.loadData();
-
     }
 
 }
