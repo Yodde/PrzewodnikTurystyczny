@@ -16,7 +16,9 @@ public class Place {
     public Place() {
 
     }
-
+    public void setAllInfoDownloaded(boolean bool){
+        allInfoDownloaded = bool;
+    }
     public int getId() {
         return id;
     }

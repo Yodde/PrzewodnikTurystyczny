@@ -16,11 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
     static List<String> urls = Arrays.asList("http://wti.mikroprint.pl/get_places.php?number=8", "http://wti.mikroprint.pl/get_place_details.php?Id=7");
     static Places places;
     static boolean downloadedPlacessComplete;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -38,8 +37,13 @@ public class MainActivity extends AppCompatActivity {
             });
         }
     }
-    public static class PlaceholderFragment extends Fragment {
+
+
+
+    public static class PlaceholderFragment extends Fragment implements AsyncResponse<Place> {
         static View rootView;
+        GetJsonDetails json = new GetJsonDetails();
+        Place place = null;
         ArrayAdapter<Place> placeAdapter;
         ListView listView;
         public PlaceholderFragment() {
@@ -48,17 +52,12 @@ public class MainActivity extends AppCompatActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             rootView = inflater.inflate(R.layout.fragment_main,container,false);
             listView = (ListView) rootView.findViewById(R.id.list_of_places);
+            json.delegate = this;
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    TextView tv = (TextView) rootView.findViewById(R.id.place_details);
-                  //  try {
-                  //      tv.setText(new GetJsonDetails().execute("http://wti.mikroprint.pl/get_place_details.php?Id=7").get().toString());
-                  //  } catch (InterruptedException e) {
-                 //       e.printStackTrace();
-                 //   } catch (ExecutionException e) {
-                //       e.printStackTrace();
-               //     };
+                    Place p = (Place) parent.getItemAtPosition(position);
+                    json.execute("http://wti.mikroprint.pl/get_place_details.php?Id="+p.getId());
                 }
             });
             return rootView;
@@ -73,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
                 e.getCause();
             }
+        }
+
+        @Override
+        public void processFinish(Place output) {
+            place = output;
+            place.setAllInfoDownloaded(true);
+            TextView tv = (TextView) rootView.findViewById(R.id.place_details);
+            tv.setText(place.toString());
         }
     }
 
