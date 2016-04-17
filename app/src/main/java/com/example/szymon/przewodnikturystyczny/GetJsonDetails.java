@@ -1,10 +1,10 @@
 package com.example.szymon.przewodnikturystyczny;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,21 +15,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * Created by Szymon on 03.04.2016.
- * Context- one object
+ * Created by Szymon on 05.04.2016.
  */
-class GetJson extends AsyncTask<GetJsonParameters, Void,Places> {
-    Places places = new Places();
-    ArrayAdapter<Place> placeAdapter;
-    ListView listView;
-    Context context;
+class GetJsonDetails extends AsyncTask<GetJsonParameters, Void, Place> {
+    //public AsyncResponse delegate = null;
     @Override
-    protected Places doInBackground(GetJsonParameters... param){
+    protected Place doInBackground(GetJsonParameters... param){
+        Place place = null;
         HttpURLConnection connection = null;
         String json;
-        context = param[0].getContext();
         try {
             URL url = param[0].getUrl();
             connection = (HttpURLConnection) url.openConnection();//disconnect
@@ -41,49 +40,46 @@ class GetJson extends AsyncTask<GetJsonParameters, Void,Places> {
                     sb.append(line + " ");
                 br.close();
                 json = sb.toString();
+                Log.d("DD","Pobiera");
                 JSONObject jsonObject = new JSONObject(json);
                 if(jsonObject.getInt("success")==1) {
-                    Log.d("JSON OBJ", "JEST");
-                    JSONArray jsonArray = jsonObject.getJSONArray("places");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        int id = object.getInt("id");
-                        String name = object.getString("name");
-                        Log.d("NAME", name);
-                        double longitude = object.getDouble("longitude");
-                        double latitude = object.getDouble("latitude");
-                        Place place = new Place(id, name, longitude, latitude);
-                        places.addPlace(place);
-                    }
+                    JSONArray jsonArray = jsonObject.getJSONArray("place");
+                    int i = 0;
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    int id = object.getInt("id");
+                    String shortDes = object.getString("shortDescription");
+                    String description = object.getString("description");
+                    String address = object.getString("address");
+                    place = MainActivity.places.getPlace(id);
+                    place.setAddress(address);
+                    place.setDescription(description);
+                    place.setShortDescription(shortDes);
+                    MainActivity.places.fill(id, place);
                 }
                 else{
                     throw new JsonInvalidParameters();
                 }
-            }
-            else{
-                throw new JsonInvalidParameters();
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (JsonInvalidParameters jsonInvalidParameters) {
-            Log.e("Error",jsonInvalidParameters.message()+"\n"+param[0].getUrl().toString());
+            Log.e("Error",jsonInvalidParameters.message()+"\n"+param[0]);
             jsonInvalidParameters.printStackTrace();
         } finally {
             connection.disconnect();
         }
-        return places;
+        return place;
     }
     @Override
-    protected void onPostExecute(Places result){
-        if(result != null) {
-            super.onPostExecute(result);
-            MainActivity.places = result;
-            MainActivity.downloadedPlacessComplete = true;
-            PlacesFragment pf = new PlacesFragment();
-            pf.loadData();
-        }
+    protected void onPostExecute(Place result){
+        PlacesFragment pf = new PlacesFragment();
+        result.setAllInfoDownloaded(true);
+        pf.loadDataDetails(result);
+        //delegate.processFinish(result);
+        //TextView tv =
     }
 
 }

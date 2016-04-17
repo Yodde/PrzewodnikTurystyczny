@@ -4,7 +4,15 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="130dp"
         android:id="@+id/list_of_places"
         android:layout_gravity="start" />
+
+    <TextView
+        android:layout_width="224dp"
+        android:layout_height="192dp"
+        android:id="@+id/place_details"
+        android:scrollbars="vertical"
+        android:layout_gravity="left|center_vertical" />
+
 </FrameLayout>

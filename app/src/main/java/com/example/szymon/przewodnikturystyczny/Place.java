@@ -11,7 +11,14 @@ public class Place {
     String shortDescription;
     String description;
     String address;
+    boolean allInfoDownloaded;
 
+    public Place() {
+
+    }
+    public void setAllInfoDownloaded(boolean bool){
+        allInfoDownloaded = bool;
+    }
     public int getId() {
         return id;
     }
@@ -68,16 +75,16 @@ public class Place {
         this.address = address;
     }
 
-    public Place() {
-
-    }
-
     public Place(int id, String name, double longitude, double latitude) {
-
+        super();
         this.id = id;
         this.name = name;
         this.longitude = longitude;
         this.latitude = latitude;
+        shortDescription = null;
+        description = null;
+        address = null;
+        allInfoDownloaded=false;
     }
 
     public Place(int id, String name, double longitude, double latitude, String shortDescription, String description, String address) {
@@ -89,5 +96,15 @@ public class Place {
         this.shortDescription = shortDescription;
         this.description = description;
         this.address = address;
+        allInfoDownloaded = true;
+    }
+    @Override
+    public String toString(){
+        if(allInfoDownloaded){
+            return this.id + " " + this.name + "\n" + this.shortDescription + "\n" + this.address;
+        }
+        else{
+            return this.id + " " + this.name + "\n";
+        }
     }
 }

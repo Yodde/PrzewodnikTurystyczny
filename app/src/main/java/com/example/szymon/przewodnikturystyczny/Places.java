@@ -15,6 +15,23 @@ public class Places {
         places.add(place);
     }
 
+    /**
+     *
+     * @param i Position of place in places list form 1 to x.
+     * @return Place at position i-1.
+     *
+     */
+    public Place getPlace(int i){
+        return places.get(i-1);
+    }
+
+    /**
+     * Fills detailed parameters of place at position i-1 in table.
+     * @param i     * @param place
+     */
+    public void fill(int i, Place place){
+        places.set(i-1,place);
+    }
     public List<Place> getPlaces() {
         return places;
     }
