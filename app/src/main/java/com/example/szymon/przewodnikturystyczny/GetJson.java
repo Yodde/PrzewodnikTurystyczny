@@ -1,16 +1,10 @@
 package com.example.szymon.przewodnikturystyczny;
 
-import android.app.Activity;
 import android.content.Context;
-import android.media.AudioTrack;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,9 +15,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by Szymon on 03.04.2016.
@@ -51,24 +42,34 @@ class GetJson extends AsyncTask<GetJsonParameters, Void,Places> {
                 br.close();
                 json = sb.toString();
                 JSONObject jsonObject = new JSONObject(json);
-                Log.d("JSON OBJ", "JEST");
-                JSONArray jsonArray = jsonObject.getJSONArray("places");
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject object = jsonArray.getJSONObject(i);
-                    int id = object.getInt("id");
-                    String name = object.getString("name");
-                    Log.d("NAME", name);
-                    double longitude = object.getDouble("longitude");
-                    double latitude = object.getDouble("latitude");
-                    Place place = new Place(id, name, longitude, latitude);
-                    places.addPlace(place);
+                if(jsonObject.getInt("success")==1) {
+                    Log.d("JSON OBJ", "JEST");
+                    JSONArray jsonArray = jsonObject.getJSONArray("places");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject object = jsonArray.getJSONObject(i);
+                        int id = object.getInt("id");
+                        String name = object.getString("name");
+                        Log.d("NAME", name);
+                        double longitude = object.getDouble("longitude");
+                        double latitude = object.getDouble("latitude");
+                        Place place = new Place(id, name, longitude, latitude);
+                        places.addPlace(place);
+                    }
                 }
-
+                else{
+                    throw new JsonInvalidParameters();
+                }
+            }
+            else{
+                throw new JsonInvalidParameters();
             }
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (JsonInvalidParameters jsonInvalidParameters) {
+            Log.e("Error",jsonInvalidParameters.message()+"\n"+param[0].getUrl().toString());
+            jsonInvalidParameters.printStackTrace();
         } finally {
             connection.disconnect();
         }
@@ -76,12 +77,13 @@ class GetJson extends AsyncTask<GetJsonParameters, Void,Places> {
     }
     @Override
     protected void onPostExecute(Places result){
-        super.onPostExecute(result);
-        MainActivity.places = result;
-        MainActivity.downloadedPlacessComplete = true;
-        MainActivity.PlaceholderFragment pf = new MainActivity.PlaceholderFragment();
-        pf.loadData();
-
+        if(result != null) {
+            super.onPostExecute(result);
+            MainActivity.places = result;
+            MainActivity.downloadedPlacessComplete = true;
+            PlacesFragment pf = new PlacesFragment();
+            pf.loadData();
+        }
     }
 
 }

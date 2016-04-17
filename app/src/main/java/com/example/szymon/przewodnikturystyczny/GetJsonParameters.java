@@ -37,6 +37,10 @@ public class GetJsonParameters {
         this.url = urls.get(mode);
         this.mode = mode;
     }
+    public GetJsonParameters(Context context,String url){
+        this.context = context;
+        this.url = url;
+    }
     /**
      * In this case mode is 0- get all places.
      * @param context Current context.
