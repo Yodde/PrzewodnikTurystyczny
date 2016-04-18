@@ -44,8 +44,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.map_button:{
-                final Intent myIntent = new Intent(MainActivity.this,CityMap.class);
-                startActivity(myIntent);
+                if(places != null) {
+                    final Intent myIntent = new Intent(MainActivity.this, CityMap.class);
+                    //myIntent.putExtra("Places",places);
+                    startActivity(myIntent);
+                }
                 break;
             }
             default:

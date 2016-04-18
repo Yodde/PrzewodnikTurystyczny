@@ -13,7 +13,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class CityMap extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
+    Places places;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +22,7 @@ public class CityMap extends FragmentActivity implements OnMapReadyCallback {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        places = MainActivity.places;
     }
 
 
@@ -37,10 +38,13 @@ public class CityMap extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        Place zamekCesarski = places.getPlace(6);
+        Place muzeumArmiiPoznan = places.getPlace(7);
+        //lng and lat have swapped positions - mistake in database?
+        LatLng zamek = new LatLng(zamekCesarski.getLongitude(),zamekCesarski.getLatitude());
+        LatLng muzeum = new LatLng(muzeumArmiiPoznan.getLongitude(),muzeumArmiiPoznan.getLatitude());
+        mMap.addMarker(new MarkerOptions().position(zamek).title(zamekCesarski.name));
+        mMap.addMarker(new MarkerOptions().position(muzeum).title(muzeumArmiiPoznan.name));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zamek,15));
     }
 }

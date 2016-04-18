@@ -18,7 +18,7 @@
     <Button
         android:layout_width="171dp"
         android:layout_height="131dp"
-        android:text="Pokarz mape"
+        android:text="Pokaż mape"
         android:id="@+id/map_button"
         android:layout_gravity="right|bottom" />
 
