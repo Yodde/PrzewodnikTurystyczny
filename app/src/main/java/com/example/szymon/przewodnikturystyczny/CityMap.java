@@ -1,8 +1,15 @@
 package com.example.szymon.przewodnikturystyczny;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.LocationListener;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.location.places.PlaceDetectionApi;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -14,6 +21,8 @@ public class CityMap extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     Places places;
+    private LocationListener myLocationChangeListener
+            ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +47,15 @@ public class CityMap extends FragmentActivity implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setMyLocationEnabled(true);
         Place zamekCesarski = places.getPlace(6);
         Place muzeumArmiiPoznan = places.getPlace(7);
         //lng and lat have swapped positions - mistake in database?
-        LatLng zamek = new LatLng(zamekCesarski.getLongitude(),zamekCesarski.getLatitude());
-        LatLng muzeum = new LatLng(muzeumArmiiPoznan.getLongitude(),muzeumArmiiPoznan.getLatitude());
+        LatLng zamek = new LatLng(zamekCesarski.getLongitude(), zamekCesarski.getLatitude());
+        LatLng muzeum = new LatLng(muzeumArmiiPoznan.getLongitude(), muzeumArmiiPoznan.getLatitude());
         mMap.addMarker(new MarkerOptions().position(zamek).title(zamekCesarski.name));
         mMap.addMarker(new MarkerOptions().position(muzeum).title(muzeumArmiiPoznan.name));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zamek,15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zamek, 15));
     }
+
 }
