@@ -18,19 +18,19 @@ public class Places {
     /**
      *
      * @param i Position of place in places list form 1 to x.
-     * @return Place at position i-1.
+     * @return Place at position i.
      *
      */
     public Place getPlace(int i){
-        return places.get(i-1);
+        return places.get(i);
     }
 
     /**
-     * Fills detailed parameters of place at position i-1 in table.
+     * Fills detailed parameters of place at position i in table.
      * @param i     * @param place
      */
     public void fill(int i, Place place){
-        places.set(i-1,place);
+        places.set(i,place);
     }
     public List<Place> getPlaces() {
         return places;

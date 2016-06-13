@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.MissingFormatArgumentException;
 
 /**
  * Created by Szymon on 05.04.2016.
@@ -40,21 +41,24 @@ class GetJsonDetails extends AsyncTask<GetJsonParameters, Void, Place> {
                     sb.append(line + " ");
                 br.close();
                 json = sb.toString();
-                Log.d("DD","Pobiera");
                 JSONObject jsonObject = new JSONObject(json);
                 if(jsonObject.getInt("success")==1) {
                     JSONArray jsonArray = jsonObject.getJSONArray("place");
-                    int i = 0;
-                    JSONObject object = jsonArray.getJSONObject(i);
+                    JSONObject object = jsonArray.getJSONObject(0);
                     int id = object.getInt("id");
                     String shortDes = object.getString("shortDescription");
                     String description = object.getString("description");
                     String address = object.getString("address");
-                    place = MainActivity.places.getPlace(id);
-                    place.setAddress(address);
-                    place.setDescription(description);
-                    place.setShortDescription(shortDes);
-                    MainActivity.places.fill(id, place);
+                    for (int i = 0; i < MainActivity.places.places.size();i++){
+                        if(MainActivity.places.places.get(i).getId() == id){
+                            place = MainActivity.places.getPlace(i);
+                            place.setAddress(address);
+                            place.setDescription(description);
+                            place.setShortDescription(shortDes);
+                            MainActivity.places.fill(i,place);
+                            break;
+                        }
+                    }
                 }
                 else{
                     throw new JsonInvalidParameters();
@@ -78,8 +82,5 @@ class GetJsonDetails extends AsyncTask<GetJsonParameters, Void, Place> {
         PlacesFragment pf = new PlacesFragment();
         result.setAllInfoDownloaded(true);
         pf.loadDataDetails(result);
-        //delegate.processFinish(result);
-        //TextView tv =
     }
-
 }

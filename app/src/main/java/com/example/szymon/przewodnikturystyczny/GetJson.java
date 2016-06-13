@@ -85,5 +85,4 @@ class GetJson extends AsyncTask<GetJsonParameters, Void,Places> {
             pf.loadData();
         }
     }
-
 }

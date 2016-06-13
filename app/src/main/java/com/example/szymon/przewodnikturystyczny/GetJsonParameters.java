@@ -44,7 +44,7 @@ public class GetJsonParameters {
     /**
      * In this case mode is 0- get all places.
      * @param context Current context.
-     * @param  url JSON's URL as String.
+     * @param  urls JSON's URL as String.
      */
     public GetJsonParameters(Context context, List<String> urls) {
         this.context = context;
