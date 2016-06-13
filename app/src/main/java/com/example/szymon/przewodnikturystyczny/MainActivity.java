@@ -2,6 +2,7 @@ package com.example.szymon.przewodnikturystyczny;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.map_button:{
                 if(places != null) {
                     final Intent myIntent = new Intent(MainActivity.this, CityMap.class);
-                    //myIntent.putExtra("Places",places);
+                    //myIntent.putExtra("Places", (Parcelable) places);
                     startActivity(myIntent);
                 }
                 break;

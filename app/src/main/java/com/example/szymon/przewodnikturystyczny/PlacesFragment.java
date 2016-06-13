@@ -55,7 +55,7 @@ public class PlacesFragment extends Fragment {
         try {
             TextView tv = (TextView) rootView.findViewById(R.id.place_details);
             tv.setMovementMethod(new ScrollingMovementMethod());
-            tv.setText(place.toString());
+            tv.setText(place.allInfo());
         }
         catch (java.lang.NullPointerException e){
             e.printStackTrace();

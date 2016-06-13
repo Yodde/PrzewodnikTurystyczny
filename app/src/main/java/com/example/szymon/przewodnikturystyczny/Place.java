@@ -100,11 +100,13 @@ public class Place {
     }
     @Override
     public String toString(){
+            return this.id + " " + this.name + "\n";
+    }
+    public String allInfo(){
         if(allInfoDownloaded){
             return this.id + " " + this.name + "\n" + this.shortDescription + "\n" + this.address;
         }
-        else{
+        else
             return this.id + " " + this.name + "\n";
-        }
     }
 }
